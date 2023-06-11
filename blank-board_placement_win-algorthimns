@@ -1,35 +1,88 @@
 blank = [['0' for _ in range(7)] for _ in range(6)]
 
-for i in range(6):
-    print(blank[i])
+# for i in range(6):
+    # print(blank[i])
          
          
-def valid_move(board, j):
-    if '0' not in board[0][j]:
-        return 'invalid move'
-    elif '0' in board[0][j]:
-        return 'valid move'
-        
+         
+# print(('0' in blank[5][3]) == True)
 
-# input: column j = 0, 1, 2, 3, 4, 5, 6 to place chip
-# output: new board arrangment 
-def four_placement(board, j, m):
-    if 'invalid move' in valid_move(board, j):
-        print('Player', m)
-        j = int(input(' choose valid column'))
-        return four_placement(board, j, m)
-    elif '0' in board[5][j]:
-        board[5][j] = m
-        return board
+def column_i(board, i):
+    return [sublist[i] for sublist in board]
+column_2 = column_i(blank, 2)
+# print(column_2)
+# def valid_move(board, j):
+    
+# print(valid_move(blank, 3))      
+
+board = [['0', '0', '0', 'L', '0', '0', '0'],
+['0', '0', '0', 'L', '0', '0', '0'],
+['0', '0', '0', 'L', '0', '0', '0'],
+['0', '0', '0', 'L', '0', '0', '0'],
+['0', '0', '0', 'L', '0', '0', '0'],
+['0', '0', 'L', 'L', '0', '0', '0']]
+# print(column_i(board,2 ))
+# print(swap(column_i(board, 2)))
+# col = swap(column_i(board,2 ))
+
+def print_board(board):
     for i in range(len(board)):
-        if '0' not in board[i][j]:
-            board[i - 1][j] = m
-            return board
+        print(board[i])
+    
+print_board(blank)
+    
+def valid_move(x, i):
+    if x[i] < 6:
+        return True
+    elif x[i] >= 6:
+        return False
+    
 board = blank
-#for i in range(7):
- #   board = four_placement(board, 3, 'L')
-  #  print(board)
-  
+col_count = [0 for i in range(7)]
+print(col_count)
+turn_num = 0
+i = 0
+inital_pos_seq = [0 for i in range(42)]
+
+def place(board, turn_num, parity, pos_seq):
+    
+    while turn_num < 42:
+        if parity == 0:
+            i = int(input('Player K column choice '))
+            if valid_move(col_count, i) == True:
+                pos_seq[turn_num] = i
+                board[5 - col_count[i]][i] = 'K'
+                turn_num = turn_num + 1
+                col_count[i] = col_count[i] + 1
+                parity = parity + 1
+            else:
+                return place(board, turn_num, parity, pos_seq)
+            print(col_count)
+            print(turn_num)
+            print_board(board)
+            print(pos_seq)
+        
+        else:
+            i = int(input('Player L column choice '))
+            if valid_move(col_count, i) == True:
+                pos_seq[turn_num] = i
+                board[5 - col_count[i]][i] = 'L'
+                turn_num = turn_num + 1
+                col_count[i] = col_count[i] + 1
+                parity = parity - 1
+            else:
+                return place(board, turn_num, parity, pos_seq)
+            print(col_count)
+            print(turn_num)
+            print_board(board)
+            print(pos_seq)
+    return place(board, turn_num, parity, pos_seq)
+
+def connect_four(x):
+    if 'Play' in x:
+        return place(blank, 0, 0, inital_pos_seq)
+connect_four('Play')
+    
 # print(four_placement(blank, 1)[0])   
 # input: board arrangement board, row i, player x marker mark
 # output: does player x win via horizontal at row i
@@ -47,57 +100,3 @@ def vertical_win_chk(board, i, mark):
         if col_i[k:k + 4] == win:
             return mark, 'wins'
     return 'not win'
-
-hor_win = [[0, 0, 0, 0, 0, 0, 0], 
-         [0, 0, 0, 0, 0, 0, 0], 
-         ['L', 0, 0, 0, 0, 0, 0], 
-         ['L', 0, 0, 0, 0, 0, 0], 
-         ['L', 0, 0, 0, 0, 0, 0], 
-         ['L', 0, 0, 'L', 0, 'L', 'L']]
-# print(hor_win[5][k:k + 4)
-# print(horizontal_win_chk(hor_win, 5, 'L'))
-# print(vertical_win_chk(hor_win, 0, 'L'))
-
-blank = [[0, 0, 0, 0, 0, 0, 0], 
-         [0, 0, 0, 0, 0, 0, 0], 
-         [0, 0, 0, 0, 0, 0, 0], 
-         [0, 0, 0, 0, 0, 0, 0], 
-         [0, 0, 0, 0, 0, 0, 0], 
-         [0, 0, 0, 0, 0, 0, 0]]
-def game(board, turn_number):
-    turn_number = 0
-    mark1 = input("Player 1 choose marker ")
-    mark2 = input("player 2 choose marker ")
-    mark = [mark1, mark2]
-    parity = 0
-    column_count = [0 for i in range(7)]
-    while turn_number <= 42:
-        print('Player', mark[parity])
-        column_choice = int(input('choose column '))
-        column_count[column_choice] = column_count[column_choice] + 1
-        print(column_count)
-    
-        if column_count[column_choice] == 6:
-            print('Player', mark[parity])
-            column_choice = int(input('choose valid column '))
-            return game(board, turn_number)
-        
-        if turn_number == 0:
-            board = four_placement(blank, column_choice, mark[parity])
-        elif turn_number > 0:
-            board = four_placement(board, column_choice, mark[parity])
-    
-        for i in range(6):
-            print(board[i])
-    
-    
-    
-    turn_number = turn_number + 1
-    
-    if parity == 0:
-        parity = parity + 1
-    elif parity == 1:
-        parity = parity - 1
-    else:
-        print(' problem ')
-game(blank, 0)
