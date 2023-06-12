@@ -1,3 +1,4 @@
+import random
 blank = [['0' for _ in range(7)] for _ in range(6)]
 
 # for i in range(6):
@@ -21,6 +22,7 @@ board = [['0', '0', '0', 'L', '0', '0', '0'],
 ['0', '0', '0', 'L', '0', '0', '0'],
 ['0', '0', '0', 'L', '0', '0', '0'],
 ['0', '0', 'L', 'L', '0', '0', '0']]
+
 # print(column_i(board,2 ))
 # print(swap(column_i(board, 2)))
 # col = swap(column_i(board,2 ))
@@ -57,10 +59,8 @@ def place(board, turn_num, parity, pos_seq):
                 parity = parity + 1
             else:
                 return place(board, turn_num, parity, pos_seq)
-            print(col_count)
-            print(turn_num)
+
             print_board(board)
-            print(pos_seq)
         
         else:
             i = int(input('Player L column choice '))
@@ -72,10 +72,7 @@ def place(board, turn_num, parity, pos_seq):
                 parity = parity - 1
             else:
                 return place(board, turn_num, parity, pos_seq)
-            print(col_count)
-            print(turn_num)
             print_board(board)
-            print(pos_seq)
     return place(board, turn_num, parity, pos_seq)
 
 def connect_four(x):
@@ -90,24 +87,38 @@ def horizontal_win_chk(board, i, mark):
     win = [mark, mark, mark, mark]
     for k in range(4):
         if board[i][k:k + 4] == win:
-            return mark, 'wins'
+            return True, mark, 'wins'
     return "not win"
     
 def vertical_win_chk(board, i, mark):
     win = [mark, mark, mark, mark]
-    col_i = column(board, i)
+    col_i = column_i(board, i)
     for k in range(4):
         if col_i[k:k + 4] == win:
-            return mark, 'wins'
+            return True, mark, 'wins'
     return 'not win'
 
-hor_win = [[0, 0, 0, 0, 0, 0, 0], 
+def hor_all_win_chk(board, mark):
+    for i in range(6):
+        if horizontal_win_chk(board, i, mark)[0] == True:
+            return mark, 'wins'
+    else:
+        return 'not win'
+def vert_all_win_chk(board, mark):
+    for i in range(7):
+        if vertical_win_chk(board, i, mark)[0] == True:
+            return mark, 'wins'
+    else:
+        return 'not win'
+
+A = [[0, 0, 0, 0, 0, 0, 0], 
          [0, 0, 0, 0, 0, 0, 0], 
+         ['0', 0, 0, 0, 0, 0, 0], 
          ['L', 0, 0, 0, 0, 0, 0], 
          ['L', 0, 0, 0, 0, 0, 0], 
-         ['L', 0, 0, 0, 0, 0, 0], 
-         ['L', 0, 0, 'L', 0, 'L', 'L']]
-         
+         ['L', 'L', 'L', 'L', 0, 'L', 0]]
+print(hor_all_win_chk(A, 'L'))
+print(vert_all_win_chk(A, 'L'))
 def valid_position_sequence(x):
     if len(x) > 42:
         print('turn limit violation')
@@ -118,7 +129,7 @@ def valid_position_sequence(x):
     return True
     
 x = [0 for _ in range(6)] + [ 1 for _ in range(6)]
-print(x)
+# print(x)
 # print(valid_position_sequence(x))
 
 def next_pos(pos, i):
@@ -129,13 +140,80 @@ def next_pos(pos, i):
 # print(next_pos(x, 2))
 
 def position_score(position):
-    if valid_position_sequence(x) == True:
+    if valid_position_sequence(position) == True:
         turn_number = len(position)
         if turn_number % 2 == 0:
-            return 1
+            return 0
         elif turn_number % 2 == 1:
-            return 2
+            return 1
     else:
         return 'invalid'
-valid_position_sequence([0 for _ in range(8)])
-print(position_score([0 for _ in range(8)]))
+#print(valid_position_sequence([0 for _ in range(8)]))
+#print(position_score([0 for _ in range(8)]))
+y = random.randrange(0, 7, 1)
+print(y)
+
+# place(board, turn_num, parity, pos_seq)
+
+# print(blank)
+def random_game(n):
+    z = [i for i in range(7)]
+    col_count = [0 for i in range(7)]
+    turn_num = 0
+    board = blank
+    while win(board) == False and turn_num < 42:
+        x = random.choice(z)
+        place(board, turn_num, parity, pos_seq)
+        col_count[x] = col_count[x] + 1
+        for i in range(7):
+            if col_count[i] == 6:
+                z.pop(i)
+        turn_num = turn_num + 1
+            
+def turn(turn_num, m, n):      
+    if turn_num % 2 == 0:
+        return m
+    if turn_num % 2 == 1:
+        return n
+
+def random_game(board, turn_num, parity, pos_seq):
+    while turn_num < 42:
+        print(z)
+        x = random.choice(z)
+        print(x)
+        pos_seq = pos_seq + [x]
+        board[5 - col_count[x]][x] = turn(turn_num, 'L', 'K')
+        turn_num = turn_num + 1
+        col_count[x] = col_count[x] + 1
+        parity = parity + 1
+                
+        print(col_count)
+        print(turn_num)
+        print_board(board)
+        print(pos_seq)
+        
+        for i in range(len(col_count)):
+            if col_count[i] > 6:
+                col_count.remove(6)
+                z.pop(i)
+    
+    return place(board, turn_num, parity, pos_seq)
+
+col_count = [0 for i in range(7)]
+z = [i for i in range(7)]
+parity = 0
+pos_seq = [0]
+random_game(blank, 0, 0, [0])
+
+# given a turn number, whose turn is it? player m or n
+def turn(turn_num, m, n):      
+    if turn_num % 2 == 0:
+        return m
+    if turn_num % 2 == 1:
+        return n
+        
+
+col_count = [6, 1, 1, 0, 3, 1, 1]
+col_count.remove(6)
+print(col_count)
+    
