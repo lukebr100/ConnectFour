@@ -11,25 +11,30 @@ def print_board(board):                                         # print board in
         print(board[i])
  
 def is_connect_four_col(i):                                     # output binary, is the selection i an integer and in the proper range
-    if isinstance(i, int) and 0<= i <= 6:                       # not needed for random game (hopefully)
-        return True
+    if isinstance(i, int) and 0<= i <= 6:                       # not needed for automated game, but should be called for game w/ user input
+        return True                                # valid column
     else:
-        return False
+        return False                               # invalid column
         
     
 
-col_count = [0 for i in range(7)]
+col_count = [0 for i in range(7)]                   # col_count[i] represents the number of times a player has placed a stone in column i, i = 0, 1, ..., 6
 
-    
-# print(four_placement(blank, 1)[0])   
+
+
+
+
+
+
+
 # input: board arrangement board, row i, player x marker mark
-# output: does player x win via horizontal at row i
+# output: only if player x win via horizontal/vert at row/col i
+
 def horizontal_win_chk(board, i, mark):
     win = [mark, mark, mark, mark]
     for k in range(4):
         if board[i][k:k + 4] == win:
             return True, mark, 'wins'
-    return "not win"
     
 def vertical_win_chk(board, i, mark):
     win = [mark, mark, mark, mark]
@@ -37,30 +42,34 @@ def vertical_win_chk(board, i, mark):
     for k in range(4):
         if col_i[k:k + 4] == win:
             return True, mark, 'wins'
-    return 'not win'
+
+
+# input: does player mark have horizontal/vert win in any row/col
+# output: only if player x win via horizontally/vert
 
 def hor_all_win_chk(board, mark):
     for i in range(6):
         if horizontal_win_chk(board, i, mark)[0] == True:
-            return mark, 'wins'
-    else:
-        return 'not win'
+            return True, mark, 'wins'
+
 def vert_all_win_chk(board, mark):
     for i in range(7):
         if vertical_win_chk(board, i, mark)[0] == True:
-            return mark, 'wins'
-    else:
-        return 'not win'
+            return True, mark, 'wins'
 
 
-def valid_position_sequence(x):
-    if len(x) > 42:
-        print('turn limit violation')
-        return False
+
+
+
+def count_limit(x):
     for i in range(7):
         if x.count(i) > 6:
             return False
     return True
+
+def valid_position_sequence(x):
+    if len(x) < 42 and count_limit(x) == True:
+        return True
     
 
 def next_pos(pos, i):
