@@ -1,29 +1,18 @@
 import random
 
-blank = [['0' for _ in range(7)] for _ in range(6)]             # intialize blank connect four board
+# intialize blank connect four board
+blank = [['0' for _ in range(7)] for _ in range(6)]
 
-def column_i(board, i):                                         # function returns column i of the board, i = 0, 1, ..., 6
+# function returns column i of the board, i = 0, 1, ..., 6
+def column_i(board, i):
     return [sublist[i] for sublist in board]
 
-
-def print_board(board):                                         # print board in an easily readable format
+# print board in an easily readable format
+def print_board(board):
     for i in range(len(board)):
         print(board[i])
- 
-def is_connect_four_col(i):                                     # output binary, is the selection i an integer and in the proper range
-    if isinstance(i, int) and 0<= i <= 6:                       # not needed for automated game, but should be called for game w/ user input
-        return True                                # valid column
-    else:
-        return False                               # invalid column
-        
-    
-
-col_count = [0 for i in range(7)]                   # col_count[i] represents the number of times a player has placed a stone in column i, i = 0, 1, ..., 6
-
-
-
-
-
+ # col_count[i] represents the number of times a player has placed a stone in column i, i = 0, 1, ..., 6
+col_count = [0 for i in range(7)]
 
 
 
@@ -59,8 +48,12 @@ def vert_all_win_chk(board, mark):
 
 
 
-
-
+def valid_choice(i):                                     
+    if isinstance(i, int) and 0 <= i <= 6:            
+        return True                         
+    else:
+        return False                      
+        
 def col_limit(x):
     for i in range(7):
         if x.count(i) > 6:
@@ -73,67 +66,81 @@ def turn_limit(x):
     else:
         return False
 
-def valid_position_sequence(x):
+
+def turn_and_col_lim(x):
     if turn_limit(x) == True and col_limit(x) == True:
         return True
     else:
         return False
-    
-def next_pos_valid(x, i):
-    if valid_position_sequence(x + [i]) == True:
+
+
+
+def turn_col_valid_choice(x, i):
+    if turn_and_col_lim(x) == True and valid_choice(i) == True:
         return True
     else:
         return False
 
 
-def random_game(n):
-    z = [i for i in range(7)]
-    col_count = [0 for i in range(7)]
-    turn_num = 0
-    board = blank
-    while win(board) == False and turn_num < 42:
-        x = random.choice(z)
-        place(board, turn_num, parity, pos_seq)
-        col_count[x] = col_count[x] + 1
-        for i in range(7):
-            if col_count[i] == 6:
-                z.pop(i)
-        turn_num = turn_num + 1
-            
-def turn(turn_num, m, n):      
-    if turn_num % 2 == 0:
-        return m
-    if turn_num % 2 == 1:
-        return n
+def next_pos_valid(x, i):
+    if valid_col(i) == True and turn_and_col_lim(x + [i]) == True:
+        return True
+    else:
+        return False
 
-def random_game(board, turn_num, parity, pos_seq):
-    while turn_num < 42:
-        print(z)
-        x = random.choice(z)
-        print(x)
+
+def whose_turn(turn_num, player):      
+    if turn_num % 2 == 0:
+        return player[0]
+    if turn_num % 2 == 1:
+        return player[1]
+
+# z = [0, 1, 2, 3, 4, 5, 6] initial column choice
+z = [i for i in range(7)]
+
+# initial turn num
+turn_num = 0
+
+# intital pos seq
+x = []
+
+def players(start):
+    if 'play' in x:
+        player1 = input('player 1 choose any character: ')
+        player2 = input('player 2 choose any character: ')
+        player = [player1, player2]
+        return player
+
+def user_game(blank):
+    print('type play')  
+    start = input()
+    players(start)
+    print(player)
+    
+    turn_num = 0
+    x = []
+    z = [i for i in range(7)]
+
+    while turn_limit(x) == True:
+        whose_turn(turn_num, player)
         pos_seq = pos_seq + [x]
         board[5 - col_count[x]][x] = turn(turn_num, 'L', 'K')
         turn_num = turn_num + 1
         col_count[x] = col_count[x] + 1
         parity = parity + 1
-                
+
+        print(pos_seq)
         print(col_count)
         print(turn_num)
         print_board(board)
-        print(pos_seq)
         
-        for i in range(len(col_count)):
-            if col_count[i] > 6:
-                col_count.remove(6)
-                z.pop(i)
+
     
     return place(board, turn_num, parity, pos_seq)
 
-col_count = [0 for i in range(7)]
-z = [i for i in range(7)]
-parity = 0
-pos_seq = [0]
-random_game(blank, 0, 0, [0])
+
+
+
 
 
     
