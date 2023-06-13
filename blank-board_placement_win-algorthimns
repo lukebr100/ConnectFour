@@ -61,22 +61,30 @@ def vert_all_win_chk(board, mark):
 
 
 
-def count_limit(x):
+def col_limit(x):
     for i in range(7):
         if x.count(i) > 6:
             return False
     return True
 
-def valid_position_sequence(x):
-    if len(x) < 42 and count_limit(x) == True:
+def turn_limit(x):
+    if len(x) < 42:
         return True
-    
-
-def next_pos(pos, i):
-    if valid_position_sequence(pos + [i]) == True:
-        return pos + [i]
     else:
-        return valid_position_sequence(pos + [i])
+        return False
+
+def valid_position_sequence(x):
+    if turn_limit(x) == True and col_limit(x) == True:
+        return True
+    else:
+        return False
+    
+def next_pos_valid(x, i):
+    if valid_position_sequence(x + [i]) == True:
+        return True
+    else:
+        return False
+
 
 def random_game(n):
     z = [i for i in range(7)]
