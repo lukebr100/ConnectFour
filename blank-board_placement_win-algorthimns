@@ -1,50 +1,11 @@
 import random
 
-# intialize blank connect four board
-blank = [['0' for _ in range(7)] for _ in range(6)]
-
-# function returns column i of the board, i = 0, 1, ..., 6
-def column_i(board, i):
-    return [sublist[i] for sublist in board]
-
-# print board in an easily readable format
-def print_board(board):
-    for i in range(len(board)):
-        print(board[i])
  # col_count[i] represents the number of times a player has placed a stone in column i, i = 0, 1, ..., 6
 col_count = [0 for i in range(7)]
 
 
 
-# input: board arrangement board, row i, player x marker mark
-# output: only if player x win via horizontal/vert at row/col i
 
-def horizontal_win_chk(board, i, mark):
-    win = [mark, mark, mark, mark]
-    for k in range(4):
-        if board[i][k:k + 4] == win:
-            return True, mark, 'wins'
-    
-def vertical_win_chk(board, i, mark):
-    win = [mark, mark, mark, mark]
-    col_i = column_i(board, i)
-    for k in range(4):
-        if col_i[k:k + 4] == win:
-            return True, mark, 'wins'
-
-
-# input: does player mark have horizontal/vert win in any row/col
-# output: only if player x win via horizontally/vert
-
-def hor_all_win_chk(board, mark):
-    for i in range(6):
-        if horizontal_win_chk(board, i, mark)[0] == True:
-            return True, mark, 'wins'
-
-def vert_all_win_chk(board, mark):
-    for i in range(7):
-        if vertical_win_chk(board, i, mark)[0] == True:
-            return True, mark, 'wins'
 
 
 
@@ -83,7 +44,7 @@ def turn_col_valid_choice(x, i):
 
 
 def next_pos_valid(x, i):
-    if valid_col(i) == True and turn_and_col_lim(x + [i]) == True:
+    if valid_choice(i) == True and turn_and_col_lim(x + [i]) == True:
         return True
     else:
         return False
@@ -95,7 +56,7 @@ def whose_turn(turn_num, player):
     if turn_num % 2 == 1:
         return player[1]
 
-# z = [0, 1, 2, 3, 4, 5, 6] initial column choice
+# initial column choices [0, 1, ..., 6]
 z = [i for i in range(7)]
 
 # initial turn num
